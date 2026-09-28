@@ -1,7 +1,8 @@
-import { useState, useEffect, useRef, MouseEvent } from 'react';
-import { Users, TrendingUp, Play, Check, Sparkles } from 'lucide-react';
-import { HeroBackground } from './HeroBackground';
-import { TrustBanner } from './TrustBanner';
+import { useState, useEffect, useRef } from "react";
+import { Users, TrendingUp, Check } from "lucide-react";
+
+import { HeroBackground } from "./HeroBackground";
+import { TrustBanner } from "./TrustBanner";
 
 interface HeroProps {
   onOpenBooking: (serviceName?: string) => void;
@@ -11,48 +12,65 @@ interface HeroProps {
 export function Hero({ onOpenBooking, onCallNow }: HeroProps) {
   const [hasMounted, setHasMounted] = useState(false);
   const [parallaxOffset, setParallaxOffset] = useState({ x: 0, y: 0 });
+
   const heroRef = useRef<HTMLElement>(null);
 
-  // Trigger choreographed entrance sequence
+  /* -------------------------------------------------------
+     HERO ENTRANCE
+  ------------------------------------------------------- */
   useEffect(() => {
     const timer = setTimeout(() => {
       setHasMounted(true);
     }, 50);
+
     return () => clearTimeout(timer);
   }, []);
 
-  // Desktop Mouse Parallax (clamped, subtle, disabled on touch/reduced-motion)
+  /* -------------------------------------------------------
+     DESKTOP PARALLAX
+  ------------------------------------------------------- */
   useEffect(() => {
-    const isTouch = window.matchMedia('(pointer: coarse)').matches;
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isTouch = window.matchMedia("(pointer: coarse)").matches;
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
     if (isTouch || prefersReducedMotion) return;
 
-    let rafId: number;
+    let rafId = 0;
+
     const handleMouseMove = (e: globalThis.MouseEvent) => {
       if (!heroRef.current) return;
+
       const rect = heroRef.current.getBoundingClientRect();
+
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
 
-      // Calculate clamped delta from center
       const deltaX = Math.max(-250, Math.min(250, e.clientX - centerX));
       const deltaY = Math.max(-250, Math.min(250, e.clientY - centerY));
 
       cancelAnimationFrame(rafId);
+
       rafId = requestAnimationFrame(() => {
-        setParallaxOffset({ x: deltaX, y: deltaY });
+        setParallaxOffset({
+          x: deltaX,
+          y: deltaY,
+        });
       });
     };
 
     const heroEl = heroRef.current;
+
     if (heroEl) {
-      heroEl.addEventListener('mousemove', handleMouseMove);
+      heroEl.addEventListener("mousemove", handleMouseMove);
     }
 
     return () => {
       if (heroEl) {
-        heroEl.removeEventListener('mousemove', handleMouseMove);
+        heroEl.removeEventListener("mousemove", handleMouseMove);
       }
+
       cancelAnimationFrame(rafId);
     };
   }, []);
@@ -61,187 +79,676 @@ export function Hero({ onOpenBooking, onCallNow }: HeroProps) {
     <section
       ref={heroRef}
       id="hero"
-      className="relative bg-[#031F5E] overflow-hidden text-white pt-8 sm:pt-12 lg:pt-16 select-none"
+      className="
+        relative
+        isolate
+        overflow-hidden
+        bg-[#031F5E]
+        text-white
+        select-none
+        pt-8
+        sm:pt-16
+        lg:pt-20
+      "
     >
-      {/* 1. Atmospheric Deep Blue Background with Bubbles, Orbits, Dots, and Sparkles */}
+      {/* =====================================================
+          ATMOSPHERIC BACKGROUND
+      ====================================================== */}
       <HeroBackground parallaxOffset={parallaxOffset} />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center pb-14 sm:pb-18 lg:pb-22">
-          
-          {/* LEFT COLUMN: Trust Badge, Headline, Paragraph, CTAs */}
-          <div className="lg:col-span-6 z-20 space-y-6 sm:space-y-7 text-center lg:text-left">
-            
-            {/* 1. Trust / Establishment Label */}
+      {/* Soft light behind the cleaner */}
+      <div
+        aria-hidden="true"
+        className="
+          pointer-events-none
+          absolute
+          right-[-15%]
+          top-[5%]
+          h-[650px]
+          w-[650px]
+          rounded-full
+          bg-[#1E9BE0]/20
+          blur-[130px]
+          opacity-70
+        "
+      />
+
+      <div
+        aria-hidden="true"
+        className="
+          pointer-events-none
+          absolute
+          left-[-20%]
+          bottom-[-20%]
+          h-[500px]
+          w-[500px]
+          rounded-full
+          bg-[#6FCBFB]/10
+          blur-[120px]
+        "
+      />
+
+      {/* =====================================================
+          MAIN HERO
+      ====================================================== */}
+      <div
+        className="
+          relative
+          z-10
+          mx-auto
+          max-w-[1440px]
+          px-4
+          xs:px-6
+          sm:px-8
+          lg:px-10
+          xl:px-14
+        "
+      >
+        <div
+          className="
+            relative
+            grid
+            min-h-[550px]
+            grid-cols-1
+            items-center
+            sm:min-h-[650px]
+            lg:min-h-[700px]
+            lg:grid-cols-12
+          "
+        >
+          {/* =================================================
+              LEFT CONTENT
+          ================================================= */}
+          <div
+            className="
+              relative
+              z-30
+              col-span-1
+              max-w-[700px]
+              pt-4
+              pb-8
+              text-center
+              sm:pt-8
+              sm:pb-10
+              lg:col-span-7
+              lg:pt-10
+              lg:pb-24
+              lg:text-left
+            "
+          >
+            {/* TRUST LABEL */}
             <div
-              style={{ animationDelay: '100ms' }}
-              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#072468]/90 border border-sky-400/30 text-sky-200 text-xs font-semibold tracking-wider uppercase shadow-inner backdrop-blur-md group hover:border-sky-400/60 transition-colors ${
-                hasMounted ? 'animate-hero-slide-up' : 'opacity-0'
-              }`}
+              style={{ animationDelay: "100ms" }}
+              className={`
+                inline-flex
+                items-center
+                gap-1.5
+                sm:gap-2
+                rounded-full
+                border
+                border-white/15
+                bg-white/5
+                px-3
+                py-1
+                sm:px-4
+                sm:py-1.5
+                text-[9px]
+                xs:text-[10px]
+                sm:text-xs
+                md:text-sm
+                font-bold
+                uppercase
+                tracking-[0.15em]
+                sm:tracking-[0.18em]
+                text-white/90
+                shadow-lg
+                backdrop-blur-md
+                ${hasMounted ? "animate-hero-slide-up" : "opacity-0"}
+              `}
             >
-              <span className="flex items-center justify-center w-4 h-4 rounded-full bg-sky-400/20 text-sky-300 group-hover:scale-110 transition-transform">
-                <Check size={11} strokeWidth={3} />
+              <span
+                className="
+                  flex
+                  h-3.5
+                  w-3.5
+                  sm:h-4
+                  sm:w-4
+                  items-center
+                  justify-center
+                  rounded-full
+                  bg-[#1E9BE0]/20
+                  text-[#6FCBFB]
+                "
+              >
+                <Check
+                  size={10}
+                  strokeWidth={3}
+                  className="w-2.5 h-2.5 sm:w-3 sm:h-3"
+                />
               </span>
-              <span className="tracking-widest text-[11px] sm:text-xs">
-                ESTABLISHED SINCE 2019
-              </span>
+
+              <span>Established Since 2019</span>
             </div>
 
-            {/* 2. Main Headline with Progressive Line Stagger */}
-            <h1
-              id="hero-main-heading"
-              className="text-4xl sm:text-5xl lg:text-[56px] font-extrabold text-white leading-[1.14] tracking-tight"
-            >
-              <span
-                style={{ animationDelay: '180ms' }}
-                className={`block transition-all ${
-                  hasMounted ? 'animate-hero-slide-up' : 'opacity-0'
-                }`}
+            {/* =================================================
+                HEADLINE
+            ================================================= */}
+            <div className="relative mt-4 xs:mt-5 sm:mt-7">
+              <h1
+                id="hero-main-heading"
+                className="
+                  mx-auto
+                  lg:mx-0
+                  max-w-[660px]
+                  font-display
+                  font-extrabold
+                  uppercase
+                  text-3xl
+                  xs:text-4xl
+                  sm:text-5xl
+                  md:text-6xl
+                  lg:text-5xl
+                  xl:text-[58px]
+                  2xl:text-[58px]
+                  leading-[1.08]
+                  tracking-tight
+                  text-white
+                "
               >
-                A New Solutions For
-              </span>
-              <span
-                style={{ animationDelay: '260ms' }}
-                className={`block text-white transition-all ${
-                  hasMounted ? 'animate-hero-slide-up' : 'opacity-0'
-                }`}
-              >
-                Your Home Cleaning
-              </span>
-            </h1>
+                {/* FIRST LINE */}
+                <span
+                  style={{ animationDelay: "180ms" }}
+                  className={`
+                    block
+                    ${hasMounted ? "animate-hero-slide-up" : "opacity-0"}
+                  `}
+                >
+                  A New Solution For Your Home Cleaning
+                </span>
+              </h1>
 
-            {/* 3. Supporting Paragraph */}
+              {/* =================================================
+                  LARGE SPARKLE / STAR
+              ================================================= */}
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 100 100"
+                className="
+                  pointer-events-none
+                  absolute
+                  right-[2%]
+                  top-[-10%]
+                  h-8
+                  w-8
+                  rotate-[-8deg]
+                  text-white
+                  drop-shadow-[0_0_14px_rgba(255,255,255,0.35)]
+                  xs:h-10
+                  xs:w-10
+                  sm:right-[6%]
+                  sm:top-[5%]
+                  sm:h-16
+                  sm:w-16
+                  lg:right-[3%]
+                  lg:top-[10%]
+                  lg:h-[72px]
+                  lg:w-[72px]
+                "
+              >
+                <path
+                  fill="currentColor"
+                  d="
+                    M50 0
+                    C55 31 69 45 100 50
+                    C69 55 55 69 50 100
+                    C45 69 31 55 0 50
+                    C31 45 45 31 50 0
+                    Z
+                  "
+                />
+              </svg>
+
+              {/* SMALL SPARKLE */}
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 100 100"
+                className="
+                  pointer-events-none
+                  absolute
+                  right-[-2%]
+                  top-[-18%]
+                  h-3
+                  w-3
+                  text-[#FFC94D]
+                  xs:h-4
+                  xs:w-4
+                  sm:h-5
+                  sm:w-5
+                  lg:right-[0%]
+                "
+              >
+                <path
+                  fill="currentColor"
+                  d="
+                    M50 0
+                    C54 31 69 46 100 50
+                    C69 54 54 69 50 100
+                    C46 69 31 54 0 50
+                    C31 46 46 31 50 0
+                    Z
+                  "
+                />
+              </svg>
+            </div>
+
+            {/* DESCRIPTION */}
             <p
-              style={{ animationDelay: '340ms' }}
-              className={`text-slate-300/90 text-sm sm:text-base max-w-xl mx-auto lg:mx-0 leading-relaxed font-normal ${
-                hasMounted ? 'animate-hero-slide-up' : 'opacity-0'
-              }`}
+              style={{ animationDelay: "360ms" }}
+              className={`
+                mx-auto
+                mt-4
+                sm:mt-5
+                lg:mt-7
+                max-w-[570px]
+                text-xs
+                xs:text-sm
+                sm:text-base
+                md:text-lg
+                lg:text-xl
+                leading-relaxed
+                text-white/80
+                lg:mx-0
+                ${hasMounted ? "animate-hero-slide-up" : "opacity-0"}
+              `}
             >
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.
+              Professional cleaning, hygiene and pest-control solutions designed
+              to keep your home spotless, healthy and protected. Booked in
+              minutes, done right the first time.
             </p>
 
-            {/* 4. Action Buttons: Book Inspection (Primary) + Call Now (Secondary) */}
+            {/* =================================================
+                BUTTONS
+            ================================================= */}
             <div
-              style={{ animationDelay: '420ms' }}
-              className={`flex flex-wrap items-center justify-center lg:justify-start gap-4 sm:gap-5 pt-1 sm:pt-2 ${
-                hasMounted ? 'animate-hero-slide-up' : 'opacity-0'
-              }`}
+              style={{ animationDelay: "430ms" }}
+              className={`
+                mt-6
+                sm:mt-8
+                flex
+                flex-wrap
+                items-center
+                justify-center
+                gap-3
+                xs:gap-4
+                lg:justify-start
+                ${hasMounted ? "animate-hero-slide-up" : "opacity-0"}
+              `}
             >
-              {/* Primary CTA: "Book Inspection" with Light Sweep Sheen */}
+              {/* PRIMARY */}
               <button
                 id="hero-book-inspection-btn"
-                onClick={() => onOpenBooking('Home Inspection')}
-                className="group relative inline-flex items-center justify-center px-8 py-3.5 sm:py-4 rounded-full bg-[#1693d9] hover:bg-[#1281bf] text-white text-sm font-bold tracking-wide shadow-lg shadow-sky-950/50 hover:shadow-[0_10px_28px_-4px_rgba(22,147,217,0.55)] hover:-translate-y-1 hover:scale-[1.02] active:scale-[0.97] active:translate-y-0 transition-all duration-200 ease-out cursor-pointer overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2596be] focus-visible:ring-offset-2 focus-visible:ring-offset-[#031F5E]"
+                onClick={() => onOpenBooking("Home Inspection")}
+                className="
+                  group
+                  relative
+                  inline-flex
+                  items-center
+                  justify-center
+                  overflow-hidden
+                  rounded-full
+                  bg-[#1E9BE0]
+                  px-5
+                  py-2.5
+                  xs:px-6
+                  xs:py-3
+                  sm:px-7
+                  sm:py-3.5
+                  text-xs
+                  xs:text-sm
+                  sm:text-base
+                  font-extrabold
+                  tracking-wide
+                  text-white
+                  shadow-[0_12px_30px_rgba(30,155,224,0.28)]
+                  transition-all
+                  duration-300
+                  hover:-translate-y-1
+                  hover:bg-[#1693d9]
+                  hover:shadow-[0_18px_38px_rgba(30,155,224,0.4)]
+                  active:scale-95
+                  focus-visible:outline-none
+                  focus-visible:ring-2
+                  focus-visible:ring-[#6FCBFB]
+                "
                 aria-label="Book a free home cleaning inspection"
               >
-                {/* Diagonal Translucent Light-Sweep Sheen */}
                 <span
                   aria-hidden="true"
-                  className="absolute inset-0 w-[200%] h-full pointer-events-none -translate-x-[150%] group-hover:translate-x-[150%] transition-transform duration-700 ease-in-out bg-gradient-to-r from-transparent via-white/35 to-transparent skew-x-[-20deg]"
+                  className="
+                    absolute
+                    inset-0
+                    -translate-x-full
+                    skew-x-[-20deg]
+                    bg-gradient-to-r
+                    from-transparent
+                    via-white/30
+                    to-transparent
+                    transition-transform
+                    duration-700
+                    group-hover:translate-x-full
+                  "
                 />
 
-                {/* Ambient button soft glow */}
-                <span
-                  aria-hidden="true"
-                  className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.25)_0%,transparent_70%)]"
-                />
-
-                <span className="relative z-10 flex items-center gap-2">
-                  <span>Book Inspection</span>
-                </span>
+                <span className="relative z-10">Book Inspection</span>
               </button>
 
-              {/* Secondary CTA: "Call Now" with circle outline & micro-interaction */}
+              {/* SECONDARY */}
               <button
                 id="hero-call-now-btn"
                 onClick={onCallNow}
-                className="group flex items-center gap-3 text-sm font-bold text-white hover:text-sky-300 transition-all duration-200 cursor-pointer py-2 px-1 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#031F5E] hover:-translate-y-0.5"
-                aria-label="Call Dr.Kleen now for immediate cleaning service"
+                className="
+                  group
+                  inline-flex
+                  items-center
+                  gap-2.5
+                  xs:gap-3
+                  rounded-full
+                  px-3
+                  py-1.5
+                  xs:px-4
+                  xs:py-2
+                  text-xs
+                  xs:text-sm
+                  sm:text-base
+                  font-bold
+                  text-white
+                  transition-all
+                  duration-300
+                  hover:-translate-y-0.5
+                  hover:text-[#FFC94D]
+                  focus-visible:outline-none
+                  focus-visible:ring-2
+                  focus-visible:ring-[#6FCBFB]
+                "
+                aria-label="Call Dr.Kleen now"
               >
-                <span className="flex items-center justify-center w-10 sm:w-11 h-10 sm:h-11 rounded-full border-2 border-white/80 group-hover:border-sky-300 bg-white/10 group-hover:bg-sky-400/20 shadow-md group-hover:shadow-[0_0_15px_rgba(56,189,248,0.4)] group-hover:scale-105 transition-all duration-200">
-                  <Play
-                    size={14}
-                    className="fill-white group-hover:fill-sky-300 translate-x-0.5 transition-colors"
-                  />
+                <span
+                  className="
+                    flex
+                    h-8
+                    w-8
+                    xs:h-9
+                    xs:w-9
+                    sm:h-10
+                    sm:w-10
+                    items-center
+                    justify-center
+                    rounded-full
+                    border
+                    border-white/70
+                    bg-white/10
+                    transition-all
+                    duration-300
+                    group-hover:border-[#FFC94D]
+                    group-hover:bg-[#FFC94D]/10
+                    group-hover:scale-105
+                  "
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="
+                      h-3.5
+                      w-3.5
+                      xs:h-4
+                      xs:w-4
+                      fill-none
+                      stroke-current
+                    "
+                    strokeWidth="2"
+                  >
+                    <path
+                      d="M22 16.92v3a2 2 0 0 1-2.18 2
+                      19.79 19.79 0 0 1-8.63-3.07
+                      19.5 19.5 0 0 1-6-6
+                      19.79 19.79 0 0 1-3.07-8.67
+                      A2 2 0 0 1 4.11 2h3
+                      a2 2 0 0 1 2 1.72
+                      12.84 12.84 0 0 0 .7 2.81
+                      2 2 0 0 1-.45 2.11L8.09 9.91
+                      a16 16 0 0 0 6 6l1.27-1.27
+                      a2 2 0 0 1 2.11-.45
+                      12.84 12.84 0 0 0 2.81.7
+                      A2 2 0 0 1 22 16.92z"
+                    />
+                  </svg>
                 </span>
-                <span className="tracking-wide text-sm font-semibold">Call Now</span>
+
+                <span>Call Now</span>
               </button>
             </div>
-
           </div>
 
-          {/* RIGHT COLUMN: Layered Cleaner Composition with Floating Badges */}
-          <div className="lg:col-span-6 relative flex items-center justify-center pt-4 lg:pt-0">
-            
-            {/* Responsive Container with Parallax Response */}
+          {/* =================================================
+              RIGHT SIDE — LARGE BORDERLESS PERSON
+          ================================================= */}
+          <div
+            className="
+              relative
+              z-20
+              col-span-1
+              flex
+              min-h-[380px]
+              xs:min-h-[430px]
+              sm:min-h-[470px]
+              items-end
+              justify-center
+              lg:absolute
+              lg:right-[-5%]
+              lg:top-20
+              lg:col-span-5
+              lg:h-full
+              lg:w-[58%]
+              lg:min-h-0
+              lg:justify-end
+            "
+          >
+            {/* PERSON LIGHT / GLOW */}
+            <div
+              aria-hidden="true"
+              className="
+                pointer-events-none
+                absolute
+                right-[5%]
+                top-[15%]
+                h-[280px]
+                w-[280px]
+                rounded-full
+                bg-[#6FCBFB]/20
+                blur-[80px]
+                xs:h-[350px]
+                xs:w-[350px]
+                sm:h-[480px]
+                sm:w-[480px]
+                sm:blur-[100px]
+                lg:right-[8%]
+                lg:top-[10%]
+                lg:h-[580px]
+                lg:w-[580px]
+              "
+            />
+
+            {/* IMAGE WRAPPER */}
             <div
               style={{
-                transform: `translate(${parallaxOffset.x * 0.008}px, ${parallaxOffset.y * 0.008}px)`,
-                transition: 'transform 0.25s cubic-bezier(0.25, 1, 0.5, 1)',
+                transform: `
+                  translate(
+                    ${parallaxOffset.x * 0.018}px,
+                    ${parallaxOffset.y * 0.012}px
+                  )
+                `,
+                transition: "transform 0.35s cubic-bezier(0.25, 1, 0.5, 1)",
               }}
-              className="relative w-full max-w-[420px] sm:max-w-[480px] lg:max-w-[500px] mx-auto"
+              className={`
+                relative
+                flex
+                h-full
+                w-full
+                items-end
+                justify-center
+                lg:justify-end
+                ${hasMounted ? "animate-hero-scale-up" : "opacity-0"}
+              `}
             >
-              
-              {/* Backplate Radial Lighting Aura behind Cleaner */}
+              {/* =================================================
+                  BORDERLESS CLEANER IMAGE
+              ================================================= */}
               <div
-                aria-hidden="true"
-                className="absolute inset-x-8 -top-8 bottom-4 bg-gradient-to-t from-[#031F5E] via-sky-500/15 to-sky-400/20 blur-2xl rounded-[40px] pointer-events-none"
-              />
-
-              {/* Main Cleaner Photographic Subject */}
-              <div
-                style={{ animationDelay: '300ms' }}
-                className={`relative overflow-hidden rounded-[28px] sm:rounded-[36px] border-2 border-sky-400/25 shadow-[0_20px_50px_rgba(2,19,56,0.7)] bg-gradient-to-b from-sky-950/60 via-[#031F5E]/80 to-[#031F5E] ${
-                  hasMounted ? 'animate-hero-scale-up' : 'opacity-0'
-                }`}
+                className="
+                  relative
+                  flex
+                  h-[380px]
+                  w-full
+                  items-end
+                  justify-center
+                  xs:h-[440px]
+                  sm:h-[570px]
+                  lg:h-[700px]
+                  lg:w-[650px]
+                  xl:h-[740px]
+                  xl:w-[700px]
+                "
               >
-                {/* Organic Idle Float on the Cleaner Image Container */}
-                <div className="relative animate-float-gentle">
-                  <img
-                    src="https://images.unsplash.com/photo-1628177142898-93e36e4e3a50?auto=format&fit=crop&w=1000&q=85"
-                    alt="Dr.Kleen Professional Cleaner with sanitized equipment"
-                    className="w-full h-[440px] sm:h-[500px] lg:h-[520px] object-cover object-top filter contrast-[1.03] brightness-[1.02] transform transition-transform duration-700 hover:scale-[1.02]"
-                    referrerPolicy="no-referrer"
-                  />
+                <img
+                  src="https://i.ibb.co/B5HwgBwN/Chat-GPT-Image-Sep-18-2026-08-14-35-PM.png"
+                  alt="Dr.Kleen Professional Cleaner"
+                  referrerPolicy="no-referrer"
+                  className="
+                    absolute
+                    bottom-0
+                    h-full
+                    w-full
+                    object-contain
+                    object-bottom
+                    contrast-[1.04]
+                    brightness-[1.04]
+                    drop-shadow-[0_30px_50px_rgba(0,0,0,0.28)]
+                    transition-transform
+                    duration-700
+                    hover:scale-[1.015]
+                  "
+                />
 
-                  {/* Gradient feathering overlay at base for seamless visual integration */}
-                  <div
-                    aria-hidden="true"
-                    className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#031F5E] via-[#031F5E]/70 to-transparent pointer-events-none"
-                  />
+                {/* LEFT FEATHER */}
+                <div
+                  aria-hidden="true"
+                  className="
+                    pointer-events-none
+                    absolute
+                    inset-y-0
+                    left-0
+                    bg-gradient-to-r
+                    from-[#031F5E]
+                    via-[#031F5E]/55
+                    to-transparent
+                  "
+                />
 
-                  {/* Dr.Kleen Brand Badge on Uniform simulation overlay */}
-                  <div className="absolute bottom-5 left-1/2 -translate-x-1/2 px-4 py-1.5 bg-[#031F5E]/90 border border-sky-400/40 rounded-full text-white text-xs font-semibold backdrop-blur-md z-10 flex items-center gap-2 shadow-xl whitespace-nowrap">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span>Dr.Kleen Verified Specialist</span>
-                  </div>
-                </div>
+                {/* BOTTOM FEATHER */}
+                <div
+                  aria-hidden="true"
+                  className="
+                    pointer-events-none
+                    absolute
+                    inset-x-0
+                    bottom-0
+                    h-[28%]
+                    bg-gradient-to-t
+                    from-[#031F5E]
+                    via-[#031F5E]/55
+                    to-transparent
+                  "
+                />
               </div>
 
-              {/* FLOATING CARD 1: Top Right "Qualified Work Team" */}
+              {/* =================================================
+                  TOP RIGHT BADGE
+              ================================================= */}
               <div
                 style={{
-                  animationDelay: '480ms',
-                  transform: `translate(${parallaxOffset.x * 0.025}px, ${parallaxOffset.y * 0.025}px)`,
-                  transition: 'transform 0.25s cubic-bezier(0.25, 1, 0.5, 1)',
+                  animationDelay: "500ms",
+                  transform: `
+                    translate(
+                      ${parallaxOffset.x * 0.025}px,
+                      ${parallaxOffset.y * 0.025}px
+                    )
+                  `,
+                  transition: "transform 0.3s cubic-bezier(0.25, 1, 0.5, 1)",
                 }}
-                className={`absolute -top-4 sm:-top-5 -right-2 sm:-right-6 z-30 ${
-                  hasMounted ? 'animate-badge-pop' : 'opacity-0'
-                }`}
+                className={`
+                  absolute
+                  right-0
+                  top-[8%]
+                  z-40
+                  xs:top-[12%]
+                  sm:right-2
+                  lg:right-[2%]
+                  ${hasMounted ? "animate-badge-pop" : "opacity-0"}
+                `}
               >
                 <div className="animate-float-alt">
                   <div
                     id="hero-badge-qualified"
-                    className="group bg-white/98 text-slate-800 rounded-2xl p-3 sm:p-3.5 shadow-[0_12px_32px_rgba(2,19,56,0.35)] border border-white/90 flex items-center gap-3 backdrop-blur-md hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(2,19,56,0.45)] transition-all duration-300 cursor-default select-none"
+                    className="
+                      flex
+                      items-center
+                      gap-2
+                      xs:gap-3
+                      rounded-xl
+                      xs:rounded-2xl
+                      border
+                      border-white/80
+                      bg-white/95
+                      p-2
+                      xs:p-2.5
+                      sm:p-3
+                      text-slate-800
+                      shadow-[0_15px_40px_rgba(2,19,56,0.3)]
+                      backdrop-blur-md
+                      transition-all
+                      duration-300
+                      hover:-translate-y-1
+                    "
                   >
-                    <div className="w-10 sm:w-11 h-10 sm:h-11 rounded-xl bg-[#ff6b4a]/15 text-[#ff6b4a] flex items-center justify-center flex-shrink-0 group-hover:scale-110 group-hover:bg-[#ff6b4a]/20 transition-all duration-300">
-                      <Users size={20} strokeWidth={2.5} />
+                    <div
+                      className="
+                        flex
+                        h-8
+                        w-8
+                        xs:h-9
+                        xs:w-9
+                        sm:h-10
+                        sm:w-10
+                        flex-shrink-0
+                        items-center
+                        justify-center
+                        rounded-lg
+                        xs:rounded-xl
+                        bg-[#FF6F5E]/15
+                        text-[#FF6F5E]
+                      "
+                    >
+                      <Users
+                        className="h-4 w-4 sm:h-5 sm:w-5"
+                        strokeWidth={2.5}
+                      />
                     </div>
+
                     <div className="pr-1">
-                      <h2 className="text-xs sm:text-sm font-extrabold text-[#031F5E] leading-tight group-hover:text-[#ff6b4a] transition-colors">
+                      <h2 className="text-[11px] xs:text-xs sm:text-sm font-extrabold text-[#031F5E]">
                         Qualified
                       </h2>
-                      <p className="text-[11px] font-medium text-slate-400 mt-0.5">
+
+                      <p className="mt-0.5 text-[9px] xs:text-[10px] sm:text-[11px] font-medium text-slate-400">
                         Work Team
                       </p>
                     </div>
@@ -249,30 +756,86 @@ export function Hero({ onOpenBooking, onCallNow }: HeroProps) {
                 </div>
               </div>
 
-              {/* FLOATING CARD 2: Bottom Left "Best Cleaning Service" */}
+              {/* =================================================
+                  BOTTOM LEFT BADGE
+              ================================================= */}
               <div
                 style={{
-                  animationDelay: '560ms',
-                  transform: `translate(${-parallaxOffset.x * 0.02}px, ${-parallaxOffset.y * 0.02}px)`,
-                  transition: 'transform 0.25s cubic-bezier(0.25, 1, 0.5, 1)',
+                  animationDelay: "600ms",
+                  transform: `
+                    translate(
+                      ${-parallaxOffset.x * 0.02}px,
+                      ${-parallaxOffset.y * 0.02}px
+                    )
+                  `,
+                  transition: "transform 0.3s cubic-bezier(0.25, 1, 0.5, 1)",
                 }}
-                className={`absolute bottom-10 sm:bottom-12 -left-2 sm:-left-7 z-30 ${
-                  hasMounted ? 'animate-badge-pop' : 'opacity-0'
-                }`}
+                className={`
+                  absolute
+                  bottom-[10%]
+                  left-0
+                  z-40
+                  xs:bottom-[13%]
+                  sm:left-2
+                  lg:bottom-[15%]
+                  lg:left-[4%]
+                  ${hasMounted ? "animate-badge-pop" : "opacity-0"}
+                `}
               >
                 <div className="animate-float-offset">
                   <div
                     id="hero-badge-best-service"
-                    className="group bg-white/98 text-slate-800 rounded-2xl p-3 sm:p-3.5 shadow-[0_12px_32px_rgba(2,19,56,0.35)] border border-white/90 flex items-center gap-3 backdrop-blur-md hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(2,19,56,0.45)] transition-all duration-300 cursor-default select-none"
+                    className="
+                      flex
+                      items-center
+                      gap-2
+                      xs:gap-3
+                      rounded-xl
+                      xs:rounded-2xl
+                      border
+                      border-white/80
+                      bg-white/95
+                      p-2
+                      xs:p-2.5
+                      sm:p-3
+                      text-slate-800
+                      shadow-[0_15px_40px_rgba(2,19,56,0.3)]
+                      backdrop-blur-md
+                      transition-all
+                      duration-300
+                      hover:-translate-y-1
+                    "
                   >
-                    <div className="w-10 sm:w-11 h-10 sm:h-11 rounded-xl bg-[#ff6b4a]/15 text-[#ff6b4a] flex items-center justify-center flex-shrink-0 group-hover:scale-110 group-hover:bg-[#ff6b4a]/20 transition-all duration-300">
-                      <TrendingUp size={20} strokeWidth={2.5} />
+                    <div
+                      className="
+                        flex
+                        h-8
+                        w-8
+                        xs:h-9
+                        xs:w-9
+                        sm:h-10
+                        sm:w-10
+                        flex-shrink-0
+                        items-center
+                        justify-center
+                        rounded-lg
+                        xs:rounded-xl
+                        bg-[#FFC94D]/20
+                        text-[#d99500]
+                      "
+                    >
+                      <TrendingUp
+                        className="h-4 w-4 sm:h-5 sm:w-5"
+                        strokeWidth={2.5}
+                      />
                     </div>
+
                     <div className="pr-1">
-                      <h2 className="text-xs sm:text-sm font-extrabold text-[#031F5E] leading-tight group-hover:text-[#ff6b4a] transition-colors">
-                        Best
+                      <h2 className="text-[11px] xs:text-xs sm:text-sm font-extrabold text-[#031F5E]">
+                        Trusted
                       </h2>
-                      <p className="text-[11px] font-medium text-slate-400 mt-0.5">
+
+                      <p className="mt-0.5 text-[9px] xs:text-[10px] sm:text-[11px] font-medium text-slate-400">
                         Cleaning Service
                       </p>
                     </div>
@@ -280,15 +843,78 @@ export function Hero({ onOpenBooking, onCallNow }: HeroProps) {
                 </div>
               </div>
 
+              {/* =================================================
+                  DECORATIVE SPARKLES AROUND PERSON
+              ================================================= */}
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 100 100"
+                className="
+                  pointer-events-none
+                  absolute
+                  left-[15%]
+                  top-[20%]
+                  h-5
+                  w-5
+                  text-white/80
+                  sm:h-6
+                  sm:w-6
+                  sm:left-[12%]
+                  lg:left-[20%]
+                "
+              >
+                <path
+                  fill="currentColor"
+                  d="
+                    M50 0
+                    C54 31 69 46 100 50
+                    C69 54 54 69 50 100
+                    C46 69 31 54 0 50
+                    C31 46 46 31 50 0
+                    Z
+                  "
+                />
+              </svg>
+
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 100 100"
+                className="
+                  pointer-events-none
+                  absolute
+                  right-[20%]
+                  top-[8%]
+                  h-3.5
+                  w-3.5
+                  sm:h-4
+                  sm:w-4
+                  text-[#FFC94D]
+                  lg:right-[18%]
+                "
+              >
+                <path
+                  fill="currentColor"
+                  d="
+                    M50 0
+                    C54 31 69 46 100 50
+                    C69 54 54 69 50 100
+                    C46 69 31 54 0 50
+                    C31 46 46 31 50 0
+                    Z
+                  "
+                />
+              </svg>
             </div>
-
           </div>
-
         </div>
       </div>
 
-      {/* 5. Lower Feature Indicators / Trust Banner */}
-      <TrustBanner hasMounted={hasMounted} />
+      {/* =====================================================
+          TRUST / FEATURE BANNER
+      ====================================================== */}
+      <div className="relative z-40">
+        <TrustBanner hasMounted={hasMounted} />
+      </div>
     </section>
   );
 }

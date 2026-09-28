@@ -1,5 +1,5 @@
-import { ArrowRight, Award, ShieldCheck, Sparkles } from 'lucide-react';
-import { teamMembers } from '../data/mockData';
+import { ArrowRight, Award, ShieldCheck, Sparkles } from "lucide-react";
+import { teamMembers } from "../data/mockData";
 
 interface TeamSectionProps {
   onMeetTeam: () => void;
@@ -8,12 +8,13 @@ interface TeamSectionProps {
 
 export function TeamSection({ onMeetTeam, onOpenBooking }: TeamSectionProps) {
   return (
-    <section id="team" className="py-20 lg:py-28 bg-[#fafcff] border-t border-slate-100 overflow-hidden">
+    <section
+      id="team"
+      className="py-20 lg:py-28 bg-[#fafcff] border-t border-slate-100 overflow-hidden"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
         {/* Section Header */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-end mb-14">
-          
           {/* Left Title */}
           <div className="lg:col-span-6">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-100 text-sky-800 text-xs font-bold uppercase tracking-wider mb-3">
@@ -21,14 +22,18 @@ export function TeamSection({ onMeetTeam, onOpenBooking }: TeamSectionProps) {
               <span>14. Vetted Leadership</span>
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-[44px] font-extrabold text-[#031F5E] tracking-tight leading-tight">
-              The People <span className="text-[#1693d9]">Behind the Clean</span>
+              The People{" "}
+              <span className="text-[#1693d9]">Behind the Clean</span>
             </h2>
           </div>
 
           {/* Right Subtitle & Action Link */}
           <div className="lg:col-span-6 space-y-2 lg:pl-8">
             <p className="text-slate-600 text-xs sm:text-sm leading-relaxed max-w-xl">
-              Cleanliness is only as reliable as the hands executing it. Our field managers, licensed entomologists, and QA directors undergo rigorous background checks and continuous chemical safety re-certification.
+              Cleanliness is only as reliable as the hands executing it. Our
+              field managers, licensed entomologists, and QA directors undergo
+              rigorous background checks and continuous chemical safety
+              re-certification.
             </p>
             <div>
               <button
@@ -36,11 +41,13 @@ export function TeamSection({ onMeetTeam, onOpenBooking }: TeamSectionProps) {
                 className="inline-flex items-center gap-2 text-xs sm:text-sm font-extrabold text-[#1693d9] hover:text-[#031F5E] transition-colors cursor-pointer group pt-1"
               >
                 <span>Meet the Team & Leadership</span>
-                <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform" />
+                <ArrowRight
+                  size={15}
+                  className="group-hover:translate-x-1 transition-transform"
+                />
               </button>
             </div>
           </div>
-
         </div>
 
         {/* 4 Key People Cards */}
@@ -92,18 +99,18 @@ export function TeamSection({ onMeetTeam, onOpenBooking }: TeamSectionProps) {
                     Verified Specialist
                   </span>
                   <button
-                    onClick={() => onOpenBooking(`Request Specialist - ${member.name}`)}
+                    onClick={() =>
+                      onOpenBooking(`Request Specialist - ${member.name}`)
+                    }
                     className="text-[#1693d9] font-bold hover:underline cursor-pointer"
                   >
                     Request Lead
                   </button>
                 </div>
               </div>
-
             </div>
           ))}
         </div>
-
       </div>
     </section>
   );

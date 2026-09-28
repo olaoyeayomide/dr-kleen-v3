@@ -3,35 +3,35 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState } from 'react';
-import { Navbar } from './components/Navbar';
-import { Hero } from './components/Hero';
-import { NeedSection } from './components/NeedSection';
-import { ExperienceSection } from './components/ExperienceSection';
-import { ServicesSection } from './components/ServicesSection';
-import { BeforeAfterSection } from './components/BeforeAfterSection';
-import { PestControlSection } from './components/PestControlSection';
-import { HowItWorksSection } from './components/HowItWorksSection';
-import { ProtectionPlansSection } from './components/ProtectionPlansSection';
-import { CorporateSection } from './components/CorporateSection';
-import { CustomerReviewsSection } from './components/CustomerReviewsSection';
-import { ServiceAreasSection } from './components/ServiceAreasSection';
-import { TeamSection } from './components/TeamSection';
-import { ShopSection } from './components/ShopSection';
-import { FinalCTA } from './components/FinalCTA';
-import { Footer } from './components/Footer';
+import { useState } from "react";
+import { Navbar } from "./components/Navbar";
+import { Hero } from "./components/Hero";
+import { NeedSection } from "./components/NeedSection";
+import { ExperienceSection } from "./components/ExperienceSection";
+import { ServicesSection } from "./components/ServicesSection";
+import { BeforeAfterSection } from "./components/BeforeAfterSection";
+import { PestControlSection } from "./components/PestControlSection";
+import { HowItWorksSection } from "./components/HowItWorksSection";
+import { ProtectionPlansSection } from "./components/ProtectionPlansSection";
+import { CorporateSection } from "./components/CorporateSection";
+import { CustomerReviewsSection } from "./components/CustomerReviewsSection";
+import { ServiceAreasSection } from "./components/ServiceAreasSection";
+// import { TeamSection } from "./components/TeamSection";
+import { ShopSection } from "./components/ShopSection";
+import { FinalCTA } from "./components/FinalCTA";
+import { Footer } from "./components/Footer";
 
 // Digital Tool & Ecosystem Modals
-import { BookingModal } from './components/BookingModal';
-import { DemoModal } from './components/DemoModal';
-import { SmartPestAssessmentModal } from './components/SmartPestAssessmentModal';
-import { ServicesDetailModal } from './components/ServicesDetailModal';
-import { CorporateQuoteModal } from './components/CorporateQuoteModal';
-import { PlansModal } from './components/PlansModal';
-import { CartDrawer } from './components/CartDrawer';
-import { CustomerPortalModal } from './components/CustomerPortalModal';
+import { BookingModal } from "./components/BookingModal";
+import { DemoModal } from "./components/DemoModal";
+import { SmartPestAssessmentModal } from "./components/SmartPestAssessmentModal";
+import { ServicesDetailModal } from "./components/ServicesDetailModal";
+import { CorporateQuoteModal } from "./components/CorporateQuoteModal";
+import { PlansModal } from "./components/PlansModal";
+import { CartDrawer } from "./components/CartDrawer";
+import { CustomerPortalModal } from "./components/CustomerPortalModal";
 
-import { CartItem, ShopProduct } from './types';
+import { CartItem, ShopProduct } from "./types";
 
 export default function App() {
   // Modal states for the 5 ecosystem doors
@@ -45,8 +45,10 @@ export default function App() {
   const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
 
   // Active service selection
-  const [selectedService, setSelectedService] = useState('Home Deep Cleaning');
-  const [selectedPrice, setSelectedPrice] = useState<string | undefined>(undefined);
+  const [selectedService, setSelectedService] = useState("Home Deep Cleaning");
+  const [selectedPrice, setSelectedPrice] = useState<string | undefined>(
+    undefined,
+  );
 
   // E-commerce Cart state
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
@@ -58,13 +60,13 @@ export default function App() {
   };
 
   const handleAddToCart = (product: ShopProduct) => {
-    setCartItems(prev => {
-      const existing = prev.find(item => item.product.id === product.id);
+    setCartItems((prev) => {
+      const existing = prev.find((item) => item.product.id === product.id);
       if (existing) {
-        return prev.map(item =>
+        return prev.map((item) =>
           item.product.id === product.id
             ? { ...item, quantity: item.quantity + 1 }
-            : item
+            : item,
         );
       }
       return [...prev, { product, quantity: 1 }];
@@ -73,21 +75,24 @@ export default function App() {
   };
 
   const handleUpdateCartQuantity = (productId: string, delta: number) => {
-    setCartItems(prev =>
-      prev
-        .map(item => {
-          if (item.product.id === productId) {
-            const newQty = item.quantity + delta;
-            return newQty > 0 ? { ...item, quantity: newQty } : null;
-          }
-          return item;
-        })
-        .filter(Boolean) as CartItem[]
+    setCartItems(
+      (prev) =>
+        prev
+          .map((item) => {
+            if (item.product.id === productId) {
+              const newQty = item.quantity + delta;
+              return newQty > 0 ? { ...item, quantity: newQty } : null;
+            }
+            return item;
+          })
+          .filter(Boolean) as CartItem[],
     );
   };
 
   const handleRemoveCartItem = (productId: string) => {
-    setCartItems(prev => prev.filter(item => item.product.id !== productId));
+    setCartItems((prev) =>
+      prev.filter((item) => item.product.id !== productId),
+    );
   };
 
   const handleClearCart = () => {
@@ -95,19 +100,24 @@ export default function App() {
   };
 
   const handleWhatsAppDirect = (msg?: string) => {
-    const text = encodeURIComponent(msg || "Hello Dr•Kleen! I'm reaching out from your website to inquire about your professional cleaning and pest protection services.");
-    window.open(`https://wa.me/2348003755336?text=${text}`, '_blank');
+    const text = encodeURIComponent(
+      msg ||
+        "Hello Dr•Kleen! I'm reaching out from your website to inquire about your professional cleaning and pest protection services.",
+    );
+    window.open(`https://wa.me/2348003755336?text=${text}`, "_blank");
   };
 
   const handleCallNow = () => {
-    window.location.href = 'tel:+2348003755336';
+    window.location.href = "tel:+2348003755336";
   };
 
-  const totalCartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+  const totalCartCount = cartItems.reduce(
+    (acc, item) => acc + item.quantity,
+    0,
+  );
 
   return (
     <div className="min-h-screen bg-white text-slate-900 font-sans antialiased selection:bg-[#1693d9] selection:text-white">
-      
       {/* 1. Header Navigation with 5 Ecosystem Doors, Cart Badge, & Customer Portal */}
       <Navbar
         onOpenBooking={handleOpenBooking}
@@ -119,28 +129,23 @@ export default function App() {
 
       {/* Main Content Sections: Exact Sequence from Comprehensive Brief */}
       <main>
-        
         {/* 2. Hero Section with Trust Banner */}
-        <Hero
-          onOpenBooking={handleOpenBooking}
-          onCallNow={handleCallNow}
-        />
+        <Hero onOpenBooking={handleOpenBooking} onCallNow={handleCallNow} />
+        {/* 4. Experienced Cleaning Services */}
+        <ExperienceSection />
 
         {/* 3. What Do You Need? (5 Category Cards) */}
         <NeedSection
           onSelectCategory={(cat) => {
-            if (cat === 'Pest Problem') {
+            if (cat === "Pest Problem") {
               setPestAssessmentModalOpen(true);
-            } else if (cat === 'Business') {
+            } else if (cat === "Business") {
               setCorporateModalOpen(true);
             } else {
               handleOpenBooking(`${cat} Cleaning`);
             }
           }}
         />
-
-        {/* 4. Experienced Cleaning Services */}
-        <ExperienceSection />
 
         {/* 5. SERVICES SECTION (Residential, Commercial, Post-Construction + View All Services →) */}
         <ServicesSection
@@ -162,12 +167,14 @@ export default function App() {
 
         {/* 9. HOW DR•KLEEN WORKS (From Request to Refresh: 01 - 05) */}
         <HowItWorksSection
-          onOpenBooking={() => handleOpenBooking('New Cleaning Milestone')}
+          onOpenBooking={() => handleOpenBooking("New Cleaning Milestone")}
         />
 
         {/* 10. PROTECTION PLANS (Don't Wait for the Mess. Stay Ahead of It.) */}
         <ProtectionPlansSection
-          onSelectPlan={(planName, price) => handleOpenBooking(`Protection Plan: ${planName}`, price)}
+          onSelectPlan={(planName, price) =>
+            handleOpenBooking(`Protection Plan: ${planName}`, price)
+          }
           onExplorePlans={() => setPlansModalOpen(true)}
         />
 
@@ -180,19 +187,23 @@ export default function App() {
         {/* 12. CUSTOMER REVIEWS (Trusted by People Who Care About Their Space) */}
         <CustomerReviewsSection
           onReadAllReviews={() => setPortalModalOpen(true)}
-          onOpenBooking={() => handleOpenBooking('Reviewer Recommended Service')}
+          onOpenBooking={() =>
+            handleOpenBooking("Reviewer Recommended Service")
+          }
         />
 
         {/* 13. SERVICE AREAS (Dr•Kleen Around You - Currently Serving vs Coming Soon) */}
         <ServiceAreasSection
-          onCheckAreaCoverage={(city) => handleOpenBooking(`Booking in ${city}`)}
+          onCheckAreaCoverage={(city) =>
+            handleOpenBooking(`Booking in ${city}`)
+          }
         />
 
         {/* 14. THE TEAM (The People Behind the Clean) */}
-        <TeamSection
-          onMeetTeam={() => handleOpenBooking('Leadership Consultation')}
+        {/* <TeamSection
+          onMeetTeam={() => handleOpenBooking("Leadership Consultation")}
           onOpenBooking={handleOpenBooking}
-        />
+        /> */}
 
         {/* 15. SHOP TEASER (Keep Your Space Clean Between Visits.) */}
         <ShopSection
@@ -202,18 +213,17 @@ export default function App() {
 
         {/* 16. FINAL CTA (Ready for a Cleaner, Safer Space? [Book] [WhatsApp] [Call]) */}
         <FinalCTA
-          onBookService={() => handleOpenBooking('Priority Final Dispatch')}
+          onBookService={() => handleOpenBooking("Priority Final Dispatch")}
           onWhatsAppUs={() => handleWhatsAppDirect()}
           onCallDrKleen={handleCallNow}
         />
-
       </main>
 
       {/* 17. FOOTER (Clean. Safe. Protected. Services, Company, Shop, Contact) */}
       <Footer
         onNavigateSection={(sectionId) => {
           const el = document.getElementById(sectionId);
-          if (el) el.scrollIntoView({ behavior: 'smooth' });
+          if (el) el.scrollIntoView({ behavior: "smooth" });
         }}
         onOpenBooking={handleOpenBooking}
         onOpenPestAssessment={() => setPestAssessmentModalOpen(true)}
@@ -234,7 +244,9 @@ export default function App() {
       <ServicesDetailModal
         isOpen={servicesModalOpen}
         onClose={() => setServicesModalOpen(false)}
-        onSelectService={(serviceName, price) => handleOpenBooking(serviceName, price)}
+        onSelectService={(serviceName, price) =>
+          handleOpenBooking(serviceName, price)
+        }
       />
 
       {/* Door 3: Corporate Facility Inspection & Quotation Modal (/corporate) */}
@@ -247,7 +259,9 @@ export default function App() {
       <PlansModal
         isOpen={plansModalOpen}
         onClose={() => setPlansModalOpen(false)}
-        onSubscribe={(planName, price) => handleOpenBooking(`Plan Subscription: ${planName}`, price)}
+        onSubscribe={(planName, price) =>
+          handleOpenBooking(`Plan Subscription: ${planName}`, price)
+        }
       />
 
       {/* Door 5: Shop Cart Drawer & Checkout */}
@@ -264,7 +278,7 @@ export default function App() {
       <CustomerPortalModal
         isOpen={portalModalOpen}
         onClose={() => setPortalModalOpen(false)}
-        onOpenBooking={() => handleOpenBooking('Portal Scheduled Service')}
+        onOpenBooking={() => handleOpenBooking("Portal Scheduled Service")}
       />
 
       {/* Standard Booking Modal */}
@@ -284,10 +298,9 @@ export default function App() {
         onClose={() => setDemoModalOpen(false)}
         onBookNow={() => {
           setDemoModalOpen(false);
-          handleOpenBooking('Video Tour Follow-up');
+          handleOpenBooking("Video Tour Follow-up");
         }}
       />
-
     </div>
   );
 }

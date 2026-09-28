@@ -1,6 +1,5 @@
 {
   "name": "Dr.Kleen - Professional Cleaning & Hygiene Services",
   "description": "Dr.Kleen is Nigeria's premier professional cleaning, hygiene, deep cleaning, and pest-control service provider.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "requestFramePermissions": []
 }
