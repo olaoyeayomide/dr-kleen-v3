@@ -242,12 +242,11 @@ export function Hero({ onOpenBooking, onCallNow }: HeroProps) {
                   max-w-[660px]
                   font-display
                   font-extrabold
-                  uppercase
                   text-3xl
                   xs:text-4xl
                   sm:text-5xl
                   md:text-6xl
-                  lg:text-5xl
+                  lg:text-[3.5rem]
                   xl:text-[58px]
                   2xl:text-[58px]
                   leading-[1.08]
@@ -442,7 +441,7 @@ export function Hero({ onOpenBooking, onCallNow }: HeroProps) {
                 <span className="relative z-10">Book Inspection</span>
               </button>
 
-              {/* SECONDARY */}
+              {/* SECONDARY — Call Now */}
               <button
                 id="hero-call-now-btn"
                 onClick={onCallNow}
@@ -465,7 +464,7 @@ export function Hero({ onOpenBooking, onCallNow }: HeroProps) {
                   transition-all
                   duration-300
                   hover:-translate-y-0.5
-                  hover:text-[#FFC94D]
+                  hover:text-[#6FCBFB]
                   focus-visible:outline-none
                   focus-visible:ring-2
                   focus-visible:ring-[#6FCBFB]
@@ -489,8 +488,8 @@ export function Hero({ onOpenBooking, onCallNow }: HeroProps) {
                     bg-white/10
                     transition-all
                     duration-300
-                    group-hover:border-[#FFC94D]
-                    group-hover:bg-[#FFC94D]/10
+                    group-hover:border-[#1E9BE0]
+                    group-hover:bg-[#1E9BE0]/20
                     group-hover:scale-105
                   "
                 >
@@ -523,7 +522,9 @@ export function Hero({ onOpenBooking, onCallNow }: HeroProps) {
                   </svg>
                 </span>
 
-                <span>Call Now</span>
+                <span>
+                  <a href="tel:+2349158929174">Call Now</a>
+                </span>
               </button>
             </div>
           </div>
